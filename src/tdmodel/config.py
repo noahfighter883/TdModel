@@ -6,6 +6,7 @@ ROOT = Path(__file__).resolve().parents[2]
 DATA_RAW = ROOT / "data" / "raw"
 DATA_PROCESSED = ROOT / "data" / "processed"
 DATA_OUTPUT = ROOT / "data" / "output"
+DATA_MANUAL = ROOT / "data" / "manual"
 NFLREADPY_CACHE_DIR = ROOT / ".nflreadpy_cache"
 
 # Baseline window for the xTD curve and player rate stats.
@@ -25,7 +26,12 @@ POSITION_GROUP_MAP = {
 POSITION_GROUPS = ["RB", "WR", "TE"]
 
 # Roster statuses that count as "on the team" for the same-team / roster-diff logic.
-ROSTERED_STATUSES = {"ACT", "RES"}
+# INA (game-day inactive) is included because load_rosters collapses each
+# player-season to a single "most recent week" snapshot -- a healthy starter
+# who was rested or scratched for one late-season game (e.g. a playoff-locked
+# team resting starters in Week 18) can otherwise show INA as their most
+# recent status despite being the team's clear starter all year.
+ROSTERED_STATUSES = {"ACT", "RES", "INA"}
 
 # Team abbreviation quirks across nflverse data sources/seasons, normalized to
 # the canonical abbreviation used by load_teams() (e.g. the 2026 preseason
@@ -37,6 +43,7 @@ TEAM_ABBR_ALIASES = {
     "SD": "LAC",
     "STL": "LA",
     "LAR": "LA",
+    "JAC": "JAX",
 }
 
 # Minimum opportunities (rush attempts + targets) in the prior season for a player

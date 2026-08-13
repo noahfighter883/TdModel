@@ -26,6 +26,7 @@ OUTPUT_COLUMNS = [
     "net_opportunity_share_change",
     "regression_signal_opportunity",
     "combined_signal",
+    "projected_td_next_season",
     "regression_label",
 ]
 
@@ -69,6 +70,14 @@ def build_scoring_table(
     df = df.with_columns(
         (pl.col("regression_signal_efficiency") + pl.col("regression_signal_opportunity")).alias(
             "combined_signal"
+        )
+    )
+    # Simple next-season projection: last season's xTD (their scoring-rate
+    # baseline, with the actual/xTD luck gap regressed out) plus the
+    # opportunity-shift signal. Equivalent to actual_td + combined_signal.
+    df = df.with_columns(
+        (pl.col("xtd") + pl.col("regression_signal_opportunity")).alias(
+            "projected_td_next_season"
         )
     )
     df = _add_regression_label(df)
