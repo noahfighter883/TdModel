@@ -1,0 +1,18 @@
+[project]
+name = "tdmodel"
+version = "0.1.0"
+description = "NFL touchdown regression model for skill-position players"
+requires-python = ">=3.11"
+dependencies = [
+    "nflreadpy>=0.1.5",
+    "polars>=1.0",
+    "numpy",
+    "scikit-learn",
+    "pyarrow",
+]
+
+[project.optional-dependencies]
+dev = ["pytest"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
