@@ -3,11 +3,13 @@ export function DeltaValue({
   digits = 1,
   suffix = "",
   size = "md",
+  icon = true,
 }: {
   value: number;
   digits?: number;
   suffix?: string;
   size?: "sm" | "md" | "lg";
+  icon?: boolean;
 }) {
   const positive = value > 0;
   const negative = value < 0;
@@ -16,8 +18,8 @@ export function DeltaValue({
 
   return (
     <span className={`tabular inline-flex items-center gap-1 font-semibold ${color} ${sizeClass}`}>
-      {positive && <ArrowUp />}
-      {negative && <ArrowDown />}
+      {icon && positive && <ArrowUp />}
+      {icon && negative && <ArrowDown />}
       {positive ? "+" : ""}
       {value.toFixed(digits)}
       {suffix}

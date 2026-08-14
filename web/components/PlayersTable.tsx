@@ -6,7 +6,6 @@ import type { Player } from "@/lib/data";
 import { JerseyBadge } from "@/components/JerseyBadge";
 import { RegressionBadge } from "@/components/RegressionBadge";
 import { DeltaValue } from "@/components/DeltaValue";
-import { SignalBar } from "@/components/SignalBar";
 
 type SortKey =
   | "combinedSignal"
@@ -32,11 +31,6 @@ export function PlayersTable({ players }: { players: Player[] }) {
   const [position, setPosition] = useState<PositionFilter>("ALL");
   const [sortKey, setSortKey] = useState<SortKey>("combinedSignal");
   const [sortDir, setSortDir] = useState<1 | -1>(-1);
-
-  const maxSignal = useMemo(
-    () => Math.max(...players.map((p) => Math.abs(p.combinedSignal)), 1),
-    [players]
-  );
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -130,11 +124,8 @@ export function PlayersTable({ players }: { players: Player[] }) {
                 <td className="tabular px-4 py-3 text-right text-text-secondary">
                   {player.xtd.toFixed(1)}
                 </td>
-                <td className="px-4 py-3">
-                  <div className="flex items-center gap-3">
-                    <SignalBar value={player.combinedSignal} max={maxSignal} />
-                    <DeltaValue value={player.combinedSignal} size="sm" />
-                  </div>
+                <td className="tabular px-4 py-3 text-right">
+                  <DeltaValue value={player.combinedSignal} size="sm" icon={false} />
                 </td>
                 <td className="tabular px-4 py-3 text-right text-text-secondary">
                   {player.vegas ? player.vegas.line.toFixed(1) : <span className="text-text-muted">&mdash;</span>}
