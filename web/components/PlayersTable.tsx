@@ -96,7 +96,7 @@ export function PlayersTable({ players }: { players: Player[] }) {
               <SortableHeader label="Opp" active={sortKey === "opportunities"} dir={sortDir} onClick={() => toggleSort("opportunities")} align="right" />
               <SortableHeader label="Actual TD" active={sortKey === "actualTd"} dir={sortDir} onClick={() => toggleSort("actualTd")} align="right" />
               <SortableHeader label="xTD" active={sortKey === "xtd"} dir={sortDir} onClick={() => toggleSort("xtd")} align="right" />
-              <SortableHeader label="Signal" active={sortKey === "combinedSignal"} dir={sortDir} onClick={() => toggleSort("combinedSignal")} />
+              <SortableHeader label="Signal" active={sortKey === "combinedSignal"} dir={sortDir} onClick={() => toggleSort("combinedSignal")} align="right" />
               <SortableHeader label="Vegas line" active={sortKey === "vegasLine"} dir={sortDir} onClick={() => toggleSort("vegasLine")} align="right" />
               <SortableHeader label="vs Vegas" active={sortKey === "vegasDiff"} dir={sortDir} onClick={() => toggleSort("vegasDiff")} align="right" />
               <th className="px-4 py-3 font-medium">Read</th>
