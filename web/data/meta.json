@@ -1,0 +1,19 @@
+{
+  "generatedAt": "2026-08-13T22:23:52.467136+00:00",
+  "seasonPrior": 2025,
+  "seasonNext": 2026,
+  "playerCount": 191,
+  "labelCounts": {
+    "Strong Positive (Buy)": 20,
+    "Positive": 38,
+    "Neutral": 75,
+    "Negative": 38,
+    "Strong Negative (Sell)": 20
+  },
+  "vegasMatchedCount": 93,
+  "histSeasons": [
+    2016,
+    2025
+  ],
+  "minOpportunities": 30
+}
