@@ -8,13 +8,21 @@ import { RegressionBadge } from "@/components/RegressionBadge";
 import { DeltaValue } from "@/components/DeltaValue";
 import { SignalBar } from "@/components/SignalBar";
 
-type SortKey = "combinedSignal" | "actualTd" | "xtd" | "opportunities" | "name" | "vegasDiff";
+type SortKey =
+  | "combinedSignal"
+  | "actualTd"
+  | "xtd"
+  | "opportunities"
+  | "name"
+  | "vegasLine"
+  | "vegasDiff";
 type PositionFilter = "ALL" | "RB" | "WR" | "TE";
 
 const POSITION_TABS: PositionFilter[] = ["ALL", "RB", "WR", "TE"];
 
 function sortValue(player: Player, key: SortKey): number | string | null {
   if (key === "name") return player.name;
+  if (key === "vegasLine") return player.vegas?.line ?? null;
   if (key === "vegasDiff") return player.vegas?.diff ?? null;
   return player[key];
 }
@@ -95,7 +103,7 @@ export function PlayersTable({ players }: { players: Player[] }) {
               <SortableHeader label="Actual TD" active={sortKey === "actualTd"} dir={sortDir} onClick={() => toggleSort("actualTd")} align="right" />
               <SortableHeader label="xTD" active={sortKey === "xtd"} dir={sortDir} onClick={() => toggleSort("xtd")} align="right" />
               <SortableHeader label="Signal" active={sortKey === "combinedSignal"} dir={sortDir} onClick={() => toggleSort("combinedSignal")} />
-              <th className="px-4 py-3 text-right font-medium">Vegas line</th>
+              <SortableHeader label="Vegas line" active={sortKey === "vegasLine"} dir={sortDir} onClick={() => toggleSort("vegasLine")} align="right" />
               <SortableHeader label="vs Vegas" active={sortKey === "vegasDiff"} dir={sortDir} onClick={() => toggleSort("vegasDiff")} align="right" />
               <th className="px-4 py-3 font-medium">Read</th>
             </tr>
