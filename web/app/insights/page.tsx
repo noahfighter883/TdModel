@@ -5,6 +5,7 @@ import { StatTile } from "@/components/StatTile";
 import { Leaderboard } from "@/components/Leaderboard";
 import { JerseyBadge } from "@/components/JerseyBadge";
 import { DeltaValue } from "@/components/DeltaValue";
+import { ActualVsExpectedChart } from "@/components/ActualVsExpectedChart";
 
 export const metadata: Metadata = {
   title: "Insights | TD Regression",
@@ -65,6 +66,20 @@ export default function InsightsPage() {
           accentClass="bg-critical-dim/30"
         />
       </div>
+
+      <section className="mt-14">
+        <h2 className="font-display text-2xl font-bold tracking-tight text-text-primary">
+          Actual vs. expected touchdowns
+        </h2>
+        <p className="mt-2 max-w-2xl text-sm text-text-secondary">
+          Every scored player at the position, plotted by expected touchdowns (xTD) against what
+          they actually scored in {meta.seasonPrior}. Hover a dot for the player, or click through
+          to their page.
+        </p>
+        <div className="mt-6">
+          <ActualVsExpectedChart players={players} />
+        </div>
+      </section>
 
       <section className="mt-14">
         <h2 className="font-display text-2xl font-bold tracking-tight text-text-primary">
