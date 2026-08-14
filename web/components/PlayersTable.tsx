@@ -8,10 +8,16 @@ import { RegressionBadge } from "@/components/RegressionBadge";
 import { DeltaValue } from "@/components/DeltaValue";
 import { SignalBar } from "@/components/SignalBar";
 
-type SortKey = "combinedSignal" | "actualTd" | "xtd" | "opportunities" | "name";
+type SortKey = "combinedSignal" | "actualTd" | "xtd" | "opportunities" | "name" | "vegasDiff";
 type PositionFilter = "ALL" | "RB" | "WR" | "TE";
 
 const POSITION_TABS: PositionFilter[] = ["ALL", "RB", "WR", "TE"];
+
+function sortValue(player: Player, key: SortKey): number | string | null {
+  if (key === "name") return player.name;
+  if (key === "vegasDiff") return player.vegas?.diff ?? null;
+  return player[key];
+}
 
 export function PlayersTable({ players }: { players: Player[] }) {
   const [query, setQuery] = useState("");
@@ -30,8 +36,16 @@ export function PlayersTable({ players }: { players: Player[] }) {
       .filter((p) => position === "ALL" || p.positionGroup === position)
       .filter((p) => !q || p.name.toLowerCase().includes(q) || p.team.toLowerCase().includes(q))
       .sort((a, b) => {
-        if (sortKey === "name") return sortDir * a.name.localeCompare(b.name);
-        return sortDir * (a[sortKey] - b[sortKey]);
+        const va = sortValue(a, sortKey);
+        const vb = sortValue(b, sortKey);
+        // Players without a matched Vegas line always sort to the bottom.
+        if (va === null && vb === null) return 0;
+        if (va === null) return 1;
+        if (vb === null) return -1;
+        if (typeof va === "string" || typeof vb === "string") {
+          return sortDir * String(va).localeCompare(String(vb));
+        }
+        return sortDir * (va - vb);
       });
   }, [players, query, position, sortKey, sortDir]);
 
@@ -72,7 +86,7 @@ export function PlayersTable({ players }: { players: Player[] }) {
       </div>
 
       <div className="overflow-x-auto rounded-xl border border-border">
-        <table className="w-full min-w-[760px] text-sm">
+        <table className="w-full min-w-[940px] text-sm">
           <thead>
             <tr className="border-b border-border bg-surface text-left text-xs text-text-muted uppercase">
               <SortableHeader label="Player" active={sortKey === "name"} dir={sortDir} onClick={() => toggleSort("name")} />
@@ -81,6 +95,8 @@ export function PlayersTable({ players }: { players: Player[] }) {
               <SortableHeader label="Actual TD" active={sortKey === "actualTd"} dir={sortDir} onClick={() => toggleSort("actualTd")} align="right" />
               <SortableHeader label="xTD" active={sortKey === "xtd"} dir={sortDir} onClick={() => toggleSort("xtd")} align="right" />
               <SortableHeader label="Signal" active={sortKey === "combinedSignal"} dir={sortDir} onClick={() => toggleSort("combinedSignal")} />
+              <th className="px-4 py-3 text-right font-medium">Vegas line</th>
+              <SortableHeader label="vs Vegas" active={sortKey === "vegasDiff"} dir={sortDir} onClick={() => toggleSort("vegasDiff")} align="right" />
               <th className="px-4 py-3 font-medium">Read</th>
             </tr>
           </thead>
@@ -111,6 +127,16 @@ export function PlayersTable({ players }: { players: Player[] }) {
                     <SignalBar value={player.combinedSignal} max={maxSignal} />
                     <DeltaValue value={player.combinedSignal} size="sm" />
                   </div>
+                </td>
+                <td className="tabular px-4 py-3 text-right text-text-secondary">
+                  {player.vegas ? player.vegas.line.toFixed(1) : <span className="text-text-muted">&mdash;</span>}
+                </td>
+                <td className="px-4 py-3 text-right">
+                  {player.vegas ? (
+                    <DeltaValue value={player.vegas.diff} size="sm" />
+                  ) : (
+                    <span className="text-xs text-text-muted">&mdash;</span>
+                  )}
                 </td>
                 <td className="px-4 py-3">
                   <RegressionBadge label={player.label} />
